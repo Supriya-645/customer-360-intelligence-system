@@ -5,3 +5,5 @@ matplotlib
 seaborn
 sqlalchemy
 jupyter
+psycopg2-binary
+python-dotenv
