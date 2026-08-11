@@ -45,42 +45,23 @@ No black boxes here — pure, auditable business logic on top of the model:
 
 ## 🏗 System Architecture
 
-                 Raw CSVs (6 tables)
-                        │
-                        ▼
-                PostgreSQL Warehouse
-          (raw staging → cleaned views)
-                        │
-                        ▼
-          SQL Feature Engineering Layer
-    (window functions, CTEs, trend features)
-                        │
-                        ▼
-                customer_features
-                        │
-          ┌─────────────┴─────────────┐
-          ▼                           ▼
-  Python EDA & Preprocessing   (pandas / scikit-learn)
-          │
-          ▼
-  Logistic Regression Model
-  (Risk Score, coefficient-level explainability)
-          │
-  ┌───────┼────────────────┐
-  ▼       ▼                ▼
-Collection  Cross-Sell    Customer
-Priority    Eligibility   Health Score
-Score       (rule-based)  (composite)
-│       │                │
-└───────┴────────┬───────┘
-▼
-customer_scores (PostgreSQL)
-│
-▼
-vw_customer_dashboard (SQL view)
-│
-▼
-Power BI Dashboard (live)
+## 🏗 System Architecture
+
+```mermaid
+flowchart TD
+    A[Raw CSVs - 6 tables] --> B[PostgreSQL Warehouse<br/>raw staging to cleaned views]
+    B --> C[SQL Feature Engineering Layer<br/>window functions, CTEs, trend features]
+    C --> D[customer_features]
+    D --> E[Python EDA and Preprocessing<br/>pandas / scikit-learn]
+    E --> F[Logistic Regression Model<br/>Risk Score, coefficient-level explainability]
+    F --> G[Collection Priority Score<br/>risk x loan exposure]
+    F --> H[Cross-Sell Eligibility<br/>rule-based]
+    F --> I[Customer Health Score<br/>composite]
+    G --> J[customer_scores table - PostgreSQL]
+    H --> J
+    I --> J
+    J --> K[vw_customer_dashboard - SQL view]
+    K --> L[Power BI Dashboard - live connection]
 
 ---
 
